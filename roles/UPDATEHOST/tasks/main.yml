@@ -1,0 +1,10 @@
+---
+
+#- name: removing previous data of host file
+#  shell: sed -i '/10.100/d' /etc/hosts
+
+- name: Copying the DYNAMIC HOST 
+  copy: src="{{ playbook_dir }}/dynamic_hosts_list.txt" dest=/home/ec2-user owner=root group=root mode='777'
+
+- name: Updating the host file
+  shell: cat /home/ec2-user/dynamic_hosts_list.txt > /etc/hosts 

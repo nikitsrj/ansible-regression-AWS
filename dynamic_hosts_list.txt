@@ -1,0 +1,29 @@
+127.0.0.1 localhost localhost.localdomain server4
+127.0.0.1 localhost localhost.localdomain server3
+127.0.0.1 localhost localhost.localdomain server2
+127.0.0.1 localhost localhost.localdomain server1
+127.0.0.1 im.shadi.com
+10.0.0.176 ww4.shaadi.com
+10.0.0.129 www.shaadi.com
+10.0.0.132 redis.shaadi.com
+10.0.0.132 redis2.shaadi.com
+10.0.0.109 back1.shaadi.com
+10.0.0.132 db1-master.shaadi.com
+10.0.0.132 db1-slave.shaadi.com
+10.0.0.132 db2-master.shaadi.com
+10.0.0.132 db2-slave.shaadi.com
+10.0.0.132 db3-master.shaadi.com
+10.0.0.132 db3-slave.shaadi.com
+10.0.0.132 db4-master.shaadi.com
+10.0.0.132 db4-slave.shaadi.com
+10.0.0.132 db5-master.shaadi.com
+10.0.0.132 db5-slave.shaadi.com
+10.0.0.132 internal-solr-female-internal-1048230868.us-east-1.elb.amazonaws.com
+10.0.0.132 internal-solr-mailer-female-internal-1015909199.us-east-1.elb.amazonaws.com
+10.0.0.132 internal-solr-mailer-male-internal-876970625.us-east-1.elb.amazonaws.com
+10.0.0.132 internal-solr-male-internal-1543902445.us-east-1.elb.amazonaws.com
+10.0.0.132 internal-solr-mixed-internal-1034267838.us-east-1.elb.amazonaws.com
+10.0.0.132 solr-mixed-mailer.shaadi.com
+10.0.0.132 cha.shaadi.com
+10.0.0.132 db-memcached.shaadi.com
+10.0.0.132 db-mailers-master.shaadi.com

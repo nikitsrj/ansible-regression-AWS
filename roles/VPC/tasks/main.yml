@@ -1,0 +1,84 @@
+---
+- name: create vpc
+  ec2_vpc:
+    region: "{{ region }}"
+    cidr_block: 10.0.0.0/16
+    resource_tags: '{"Name":"{{ prefix }}_vpc"}'
+    subnets:
+      - cidr: 10.0.0.0/24
+        az: "{{ az }}"
+        resource_tags: '{"Name":"{{ prefix }}_subnet_public"}'
+      - cidr: 10.0.1.0/24
+        az: "{{ az }}"
+        resource_tags: '{"Name":"{{ prefix }}_subnet_private"}'
+    internet_gateway: yes
+    route_tables:
+      - subnets:
+          - 10.0.0.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+  register: vpc
+- debug: var=vpc
+
+- name: Provision EC2 security group
+  local_action:
+        module: ec2_group
+        state: present
+        name: "{{ security_group }}"
+        description: "{{ security_group }}"
+        vpc_id: "{{ vpc.vpc_id }}"
+        region: "{{ region }}"
+        rules:
+#          - proto: tcp
+#            from_port: 80
+#            to_port: 80
+#            cidr_ip: 0.0.0.0/0
+#          - proto: tcp
+#            from_port: 22
+#            to_port: 22
+#            cidr_ip:  0.0.0.0/0
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+#          - proto: all
+#            cidr_ip: 203.197.78.162/32
+#          - proto: all
+#            cidr_ip: 182.74.32.196/32
+#          - proto: all
+#            cidr_ip: 106.51.254.158/32
+  register: aws_sg
+- debug: var=aws_sg
+
+
+- name: Update  Security Group
+  local_action:
+        module: ec2_group
+        name: "{{ security_group }}"
+        description: "{{ security_group }}" 
+        region: "{{ region }}"
+        rules:
+          - proto: all
+            group_id : "{{ aws_sg.group_id }}"
+          - proto: all
+            cidr_ip: 182.74.32.195/32
+          - proto: all
+            cidr_ip: 203.197.78.162/32
+          - proto: all
+            cidr_ip: 182.74.32.196/32
+          - proto: all
+            cidr_ip: 106.51.254.158/32
+        rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+  register: aws_sg
+- debug: var=aws_sg
+
+   
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+---
+
+- name: Updating the public IP
+  command: "{{ playbook_dir }}/dynamic.sh {{ playbook_dir }}/hosts"
+
+- name: changing the ini config
+  command: sed -i '46s/ip_address/private_ip_address/' /usr/bin/ec2.ini
+
+- name: Running the internal_dynamic.sh
+  command: ./internal_dynamic.sh
+
+- pause: minutes=2

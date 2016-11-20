@@ -1,0 +1,30 @@
+- hosts: localhost
+  connection: local
+  become_method: su
+  gather_facts: yes
+  vars:
+      keypair: "regression-ansible"
+      image1: "ami-26440c31"
+      image2: "ami-382e502f"
+      image3: "ami-30334d27"
+      image4: "ami-f9324cee"
+      region: "us-east-1"
+      #Prefix for naming
+      prefix: "shadi-ansible"
+      az: "us-east-1b"
+      inst_name1: "server1"
+      inst_name2: "server2"
+      inst_name3: "server3"
+      inst_name4: "server4"
+      security_group: "shadi-demo-SG"
+
+#  roles:
+#    - VPC
+#    - INSTANCES
+#    - UPDATEIP
+- hosts: servers
+  sudo: yes
+  remote_user: ec2-user
+  roles:
+   - UPDATEHOST
+

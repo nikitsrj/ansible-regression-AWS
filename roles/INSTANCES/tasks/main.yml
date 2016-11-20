@@ -1,0 +1,209 @@
+---
+
+#- name: creating ELB
+#  ec2_elb_lb:
+#    region: "{{ region }}"
+#    name: "{{ item }}"
+#    state: present
+#    subnets: "{{ vpc.subnets[0].id }}"
+#    listeners:
+#      - protocol: http
+#        load_balancer_port: 80
+#        instance_port: 7070
+#      - protocol: tcp
+#        load_balancer_port: 5222
+#        instance_protocol: tcp
+#        instance_port: 5222
+#      - protocol: tcp
+#        load_balancer_port: 8188
+#        instance_protocol: tcp
+#        instance_port: 8188
+#    health_check:
+#        ping_protocol: tcp
+#        ping_port: 7070
+#        response_timeout: 5
+#        interval: 30
+#        unhealthy_threshold: 5
+#        healthy_threshold: 3
+#  register: ec2_elb
+#  with_items:
+#      - elb1server
+#      - elb2server
+#      - elb3server
+#      - elb4server
+#  register: ec2_elb
+#- debug: var=ec2_elb
+
+- name: creating ELB 1
+  ec2_elb_lb:
+    region: "{{ region }}"
+    name: "elb1server"
+    state: present
+    security_group_ids: "{{ aws_sg.group_id }}" 
+    subnets: "{{ vpc.subnets[0].id }}"
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 7070
+      - protocol: https
+        load_balancer_port: 443
+        instance_protocol: http
+        instance_port: 7070
+        ssl_certificate_id: arn:aws:acm:us-east-1:238537778401:certificate/76134d36-2c41-4c99-97c1-090936d87d54
+      - protocol: tcp
+        load_balancer_port: 5222
+        instance_protocol: tcp
+        instance_port: 5222
+      - protocol: tcp
+        load_balancer_port: 8188
+        instance_protocol: tcp
+        instance_port: 8188
+    health_check:
+        ping_protocol: tcp
+        ping_port: 7070
+        response_timeout: 5
+        interval: 30
+        unhealthy_threshold: 5
+        healthy_threshold: 3
+  register: ec2_elb 
+- debug: var=ec2_elb
+
+- name: creating ELB 2
+  ec2_elb_lb:
+    region: "{{ region }}"
+    name: "elb2server"
+    state: present 
+    security_group_ids: "{{ aws_sg.group_id }}"
+    subnets: "{{ vpc.subnets[0].id }}"
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+    health_check:
+        ping_protocol: tcp
+        ping_port: 80
+        response_timeout: 5
+        interval: 30
+        unhealthy_threshold: 5
+        healthy_threshold: 3
+  register: ec2_elb 
+- debug: var=ec2_elb
+
+- name: creating ELB 3
+  ec2_elb_lb:
+    region: "{{ region }}"
+    name: "elb3server"
+    state: present 
+    security_group_ids: "{{ aws_sg.group_id }}"
+    subnets: "{{ vpc.subnets[0].id }}"
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+    health_check:
+        ping_protocol: tcp
+        ping_port: 80
+        response_timeout: 5
+        interval: 30
+        unhealthy_threshold: 5
+        healthy_threshold: 3
+  register: ec2_elb 
+- debug: var=ec2_elb
+
+- name: creating ELB 4
+  ec2_elb_lb:
+    region: "{{ region }}"
+    name: "elb4server"
+    state: present 
+    security_group_ids: "{{ aws_sg.group_id }}"
+    subnets: "{{ vpc.subnets[0].id }}"
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+      - protocol: https
+        load_balancer_port: 443
+        instance_protocol: http
+        instance_port: 80
+        ssl_certificate_id: arn:aws:acm:us-east-1:238537778401:certificate/76134d36-2c41-4c99-97c1-090936d87d54
+    health_check:
+        ping_protocol: tcp
+        ping_port: 80
+        response_timeout: 5
+        interval: 30
+        unhealthy_threshold: 5
+        healthy_threshold: 3
+  register: ec2_elb 
+- debug: var=ec2_elb
+
+- name: start the instances
+  ec2:
+      image: "{{ item.ami }}"  
+      region: "{{ region }}"
+      instance_type: "{{ item.instance_type }}"
+      assign_public_ip: yes
+      key_name: "{{ keypair }}"
+      group: "{{ security_group }}" 
+      instance_tags: { Name: "{{ item.name }}", type: ss, env: production}
+      vpc_subnet_id: "{{ item.subnet }}" 
+      wait: true
+  register: ec2_info
+  with_items:
+      - region: "{{ region }}"
+        name: server1
+        ami: "{{ image1 }}"
+        instance_type: "c4.xlarge"  
+        subnet: "{{ vpc.subnets[0].id }}"
+      - region: "{{ region }}"
+        name: server2
+        ami: "{{ image2 }}"
+        instance_type: "m3.medium"
+        subnet: "{{ vpc.subnets[0].id }}"
+      - region: "{{ region }}"
+        name: server3
+        ami: "{{ image3 }}"
+        instance_type: "m3.medium"
+        subnet: "{{ vpc.subnets[0].id }}"
+      - region: "{{ region }}"
+        name: server4
+        ami: "{{ image4 }}" 
+        instance_type: "m3.medium"
+        subnet: "{{ vpc.subnets[0].id }}"
+  register: ec2_info
+- debug: var=ec2_info
+
+- pause: minutes=4
+
+- name: Attaching the Instance1 to the respected elb
+  ec2_elb:
+   instance_id: "{{ ec2_info.results[0].instance_ids[0] }}"
+   ec2_elbs: "elb1server"
+   region: "{{ region }}"
+   state: present
+  ignore_errors: yes
+
+- name: Attaching the Instance2 to the respected elb
+  ec2_elb:
+   instance_id: "{{ ec2_info.results[1].instance_ids[0] }}"
+   ec2_elbs: "elb2server"
+   region: "{{ region }}"
+   state: present
+  ignore_errors: yes
+
+- name: Attaching the Instance3 to the respected elb
+  ec2_elb:
+   instance_id: "{{ ec2_info.results[2].instance_ids[0] }}"
+   ec2_elbs: "elb3server"
+   region: "{{ region }}"
+   state: present
+  ignore_errors: yes
+
+- name: Attaching the Instance4 to the respected elb
+  ec2_elb:
+   instance_id: "{{ ec2_info.results[3].instance_ids[0] }}"
+   ec2_elbs: "elb4server"
+   region: "{{ region }}"
+   state: present
+  ignore_errors: yes
+
+

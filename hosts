@@ -1,0 +1,8 @@
+[local]
+localhost
+[servers]
+server1 ansible_ssh_private_key_file="{{ playbook_dir }}/regression-ansible.pem" ansible_host="54.198.202.93"
+server2 ansible_ssh_private_key_file="{{ playbook_dir }}/regression-ansible.pem" ansible_host="52.90.2.27"
+server3 ansible_ssh_private_key_file="{{ playbook_dir }}/regression-ansible.pem" ansible_host="54.226.66.146"
+server4 ansible_ssh_private_key_file="{{ playbook_dir }}/regression-ansible.pem" ansible_host="52.91.7.140"
+
