@@ -10,18 +10,19 @@
       image4: "ami-f9324cee"
       region: "us-east-1"
       #Prefix for naming
-      prefix: "shadi-ansible"
+#      prefix: "shadi-ansible"
       az: "us-east-1b"
-      inst_name1: "server1"
-      inst_name2: "server2"
-      inst_name3: "server3"
-      inst_name4: "server4"
-      security_group: "shadi-demo-SG"
+      inst_prefix: "{{ prefix }}"
+      inst_name1: "{{ inst_prefix }}_server1"
+      inst_name2: "{{ inst_prefix }}_server2"
+      inst_name3: "{{ inst_prefix }}_server3"
+      inst_name4: "{{ inst_prefix }}_server4"
+      security_group: "{{ inst_prefix }}_shadi-demo-SG"
 
-#  roles:
-#    - VPC
-#    - INSTANCES
-#    - UPDATEIP
+  roles:
+    - VPC
+    - INSTANCES
+    - UPDATEIP
 - hosts: servers
   sudo: yes
   remote_user: ec2-user

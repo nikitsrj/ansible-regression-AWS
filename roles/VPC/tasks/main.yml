@@ -3,14 +3,14 @@
   ec2_vpc:
     region: "{{ region }}"
     cidr_block: 10.0.0.0/16
-    resource_tags: '{"Name":"{{ prefix }}_vpc"}'
+    resource_tags: '{"Name":"{{ inst_prefix }}_vpc"}'
     subnets:
       - cidr: 10.0.0.0/24
         az: "{{ az }}"
-        resource_tags: '{"Name":"{{ prefix }}_subnet_public"}'
+        resource_tags: '{"Name":"{{ inst_prefix }}_subnet_public"}'
       - cidr: 10.0.1.0/24
         az: "{{ az }}"
-        resource_tags: '{"Name":"{{ prefix }}_subnet_private"}'
+        resource_tags: '{"Name":"{{ inst_prefix }}_subnet_private"}'
     internet_gateway: yes
     route_tables:
       - subnets:
