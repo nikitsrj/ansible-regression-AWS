@@ -4,13 +4,13 @@
   gather_facts: yes
   vars:
       keypair: "regression-ansible"
-      image1: "ami-26440c31"
-      image2: "ami-382e502f"
-      image3: "ami-30334d27"
-      image4: "ami-f9324cee"
+      image1: "ami-b63769a1"
+      image2: "ami-b63769a1"
+      image3: "ami-b63769a1"
+      image4: "ami-b63769a1"
       region: "us-east-1"
       #Prefix for naming
-#      prefix: "shadi-ansible"
+      #prefix: "shadi-ansible"
       az: "us-east-1b"
       inst_prefix: "{{ prefix }}"
       inst_name1: "{{ inst_prefix }}_server1"
@@ -22,10 +22,10 @@
   roles:
     - VPC
     - INSTANCES
-    - UPDATEIP
-- hosts: servers
-  sudo: yes
-  remote_user: ec2-user
-  roles:
-   - UPDATEHOST
+#    - UPDATEIP
+#- hosts: servers
+#  sudo: yes
+#  remote_user: ec2-user
+#  roles:
+#   - UPDATEHOST
 
